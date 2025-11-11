@@ -8,13 +8,11 @@ void main() {
   const MethodChannel channel = MethodChannel('com.sktelecom.grayscale');
 
   setUp(() {
-    TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger
-        .setMockMethodCallHandler(channel, null);
+    TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger.setMockMethodCallHandler(channel, null);
   });
 
   tearDown(() {
-    TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger
-        .setMockMethodCallHandler(channel, null);
+    TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger.setMockMethodCallHandler(channel, null);
   });
 
   group('Grayscale', () {
@@ -22,8 +20,9 @@ void main() {
       const String inputPath = '/path/to/input.jpg';
       const String expectedOutputPath = '/path/to/input_grayscale.png';
 
-      TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger
-          .setMockMethodCallHandler(channel, (MethodCall methodCall) async {
+      TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger.setMockMethodCallHandler(channel, (
+        MethodCall methodCall,
+      ) async {
         expect(methodCall.method, equals('convertToGrayscale'));
         expect(methodCall.arguments, isA<Map>());
         final Map args = methodCall.arguments as Map;
@@ -41,8 +40,9 @@ void main() {
       const String customOutputPath = '/path/to/custom/output.png';
       const String expectedOutputPath = customOutputPath;
 
-      TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger
-          .setMockMethodCallHandler(channel, (MethodCall methodCall) async {
+      TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger.setMockMethodCallHandler(channel, (
+        MethodCall methodCall,
+      ) async {
         expect(methodCall.method, equals('convertToGrayscale'));
         expect(methodCall.arguments, isA<Map>());
         final Map args = methodCall.arguments as Map;
@@ -51,10 +51,7 @@ void main() {
         return {'resultPath': expectedOutputPath};
       });
 
-      final result = await Grayscale.convertToGrayscale(
-        inputPath,
-        outputPath: customOutputPath,
-      );
+      final result = await Grayscale.convertToGrayscale(inputPath, outputPath: customOutputPath);
       expect(result, equals(expectedOutputPath));
     });
 
@@ -63,49 +60,44 @@ void main() {
       const String errorCode = 'FILE_NOT_FOUND';
       const String errorMessage = 'Image file not found at path';
 
-      TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger
-          .setMockMethodCallHandler(channel, (MethodCall methodCall) async {
-        throw PlatformException(
-          code: errorCode,
-          message: errorMessage,
-        );
+      TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger.setMockMethodCallHandler(channel, (
+        MethodCall methodCall,
+      ) async {
+        throw PlatformException(code: errorCode, message: errorMessage);
       });
 
       expect(
         () => Grayscale.convertToGrayscale(inputPath),
-        throwsA(isA<PlatformException>()
-            .having((e) => e.code, 'code', errorCode)
-            .having((e) => e.message, 'message', errorMessage)),
+        throwsA(
+          isA<PlatformException>()
+              .having((e) => e.code, 'code', errorCode)
+              .having((e) => e.message, 'message', errorMessage),
+        ),
       );
     });
 
     test('convertToGrayscale should handle invalid response format', () async {
       const String inputPath = '/path/to/input.jpg';
 
-      TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger
-          .setMockMethodCallHandler(channel, (MethodCall methodCall) async {
+      TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger.setMockMethodCallHandler(channel, (
+        MethodCall methodCall,
+      ) async {
         return {'wrongKey': '/some/path.png'};
       });
 
-      expect(
-        () => Grayscale.convertToGrayscale(inputPath),
-        throwsA(isA<TypeError>()),
-      );
+      expect(() => Grayscale.convertToGrayscale(inputPath), throwsA(isA<TypeError>()));
     });
 
     test('convertToGrayscale should handle null response', () async {
       const String inputPath = '/path/to/input.jpg';
 
-      TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger
-          .setMockMethodCallHandler(channel, (MethodCall methodCall) async {
+      TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger.setMockMethodCallHandler(channel, (
+        MethodCall methodCall,
+      ) async {
         return null;
       });
 
-      expect(
-        () => Grayscale.convertToGrayscale(inputPath),
-        throwsA(isA<TypeError>()),
-      );
+      expect(() => Grayscale.convertToGrayscale(inputPath), throwsA(isA<TypeError>()));
     });
   });
 }
-

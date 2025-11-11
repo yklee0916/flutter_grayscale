@@ -12,15 +12,9 @@ class Grayscale {
   ///
   /// On iOS this uses CoreImage with a GPU-backed CIContext.
   static Future<String> convertToGrayscale(String imagePath, {String? outputPath}) async {
-    final Map<String, dynamic> args = {
-      'imagePath': imagePath,
-      if (outputPath != null) 'outputPath': outputPath,
-    };
-    final Map<dynamic, dynamic> result =
-        await _channel.invokeMethod('convertToGrayscale', args);
+    final Map<String, dynamic> args = {'imagePath': imagePath, if (outputPath != null) 'outputPath': outputPath};
+    final Map<dynamic, dynamic> result = await _channel.invokeMethod('convertToGrayscale', args);
     final String path = result['resultPath'] as String;
     return path;
   }
 }
-
-
