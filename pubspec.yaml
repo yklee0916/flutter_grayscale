@@ -11,6 +11,8 @@ flutter:
     platforms:
       ios:
         pluginClass: GrayscalePlugin
+      macos:
+        pluginClass: GrayscalePlugin
 
 dependencies:
   flutter:
